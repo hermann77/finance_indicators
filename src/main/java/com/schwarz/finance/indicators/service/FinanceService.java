@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.Stack;
+import java.util.TreeMap;
 
 
 /**
@@ -22,6 +23,21 @@ public class FinanceService implements FinanceServiceInterface {
     public FinanceService createInstance(SortedMap<Integer, Double> dataFrame) {
         this.dataFrame = dataFrame;
         return this;
+    }
+
+
+    @Override
+    public TreeMap<Integer, Double> getTestData() {
+        TreeMap<Integer, Double> data = new TreeMap<>();
+
+        // fill data
+        Integer firstTimestamp = Math.toIntExact(System.currentTimeMillis() / 1000);
+        data.put(firstTimestamp, Math.random() * 5);
+        for (int i = 1; i <= 99; i++) {
+            Integer timestamp = Math.toIntExact((System.currentTimeMillis() / 1000) + i);
+            data.put(timestamp, Math.random() * 5);
+        }
+        return data;
     }
 
     /**

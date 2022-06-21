@@ -1,6 +1,7 @@
 package com.schwarz.finance.indicators.service;
 
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 public interface FinanceServiceInterface {
 
@@ -12,6 +13,7 @@ public interface FinanceServiceInterface {
      * @return Double exponentially weighted moving average
      */
     public abstract FinanceService createInstance(SortedMap<Integer, Double> dataFrame);
+    public abstract TreeMap<Integer, Double> getTestData();
     public abstract Double ewm(Double span, boolean adjust, int min_periods);
     public abstract Double MACD(int fastPeriod, int slowPeriod);
     public abstract Double signal(int signalPeriod);

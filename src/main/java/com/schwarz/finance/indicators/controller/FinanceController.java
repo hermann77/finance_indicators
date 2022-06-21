@@ -26,21 +26,16 @@ public class FinanceController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getData() {
-        TreeMap<Integer, Double> data = new TreeMap<>();
+
         Map<Integer,Map<String, Double>> result = new HashMap<>();
 
-        // fill data
-        Integer firstTimestamp = Math.toIntExact(System.currentTimeMillis() / 1000);
-        data.put(firstTimestamp, Math.random() * 5);
-        for (int i = 1; i <= 99; i++) {
-            Integer timestamp = Math.toIntExact((System.currentTimeMillis() / 1000) + i);
-            data.put(timestamp, Math.random() * 5);
-        }
-        
+        TreeMap<Integer, Double> data = financeServiceInterface.getTestData();
+        Integer firstTimestamp = data.firstEntry().getKey();
+
         for (Map.Entry<Integer, Double> entry : data.entrySet()) {
             Integer timestamp = entry.getKey();
             Double value = entry.getValue();
-            Map <String, Double> outputMap = new HashMap<>();
+            Map<String, Double> outputMap = new HashMap<>();
 
             SortedMap<Integer, Double> subMap = data.subMap(firstTimestamp, timestamp);
 
