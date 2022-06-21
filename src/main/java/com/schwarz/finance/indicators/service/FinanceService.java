@@ -29,11 +29,8 @@ public class FinanceService implements FinanceServiceInterface {
     @Override
     public TreeMap<Integer, Double> getTestData() {
         TreeMap<Integer, Double> data = new TreeMap<>();
-
         // fill data
-        Integer firstTimestamp = Math.toIntExact(System.currentTimeMillis() / 1000);
-        data.put(firstTimestamp, Math.random() * 5);
-        for (int i = 1; i <= 99; i++) {
+        for (int i = 0; i <= 99; i++) {
             Integer timestamp = Math.toIntExact((System.currentTimeMillis() / 1000) + i);
             data.put(timestamp, Math.random() * 5);
         }
