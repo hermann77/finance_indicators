@@ -20,7 +20,7 @@ public class FinanceService implements FinanceServiceInterface {
     private Stack<Double> histogram = new Stack<>();
 
     @Override
-    public FinanceService createInstance(SortedMap<Integer, Double> dataFrame) {
+    public FinanceService getInstance(SortedMap<Integer, Double> dataFrame) {
         this.dataFrame = dataFrame;
         return this;
     }

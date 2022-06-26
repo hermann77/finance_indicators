@@ -40,7 +40,7 @@ public class FinanceController {
             SortedMap<Integer, Double> subMap = data.subMap(firstTimestamp, timestamp);
 
 
-            FinanceServiceInterface financeService = financeServiceInterface.createInstance(subMap);
+            FinanceServiceInterface financeService = financeServiceInterface.getInstance(subMap);
             Double ewm = financeService.ewm(26.0, true, 26);
             Double macd = financeService.MACD(12, 26);
             Double macdSignal = financeService.signal(9);

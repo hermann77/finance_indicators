@@ -12,7 +12,7 @@ public interface FinanceServiceInterface {
      *
      * @return Double exponentially weighted moving average
      */
-    public abstract FinanceService createInstance(SortedMap<Integer, Double> dataFrame);
+    public abstract FinanceService getInstance(SortedMap<Integer, Double> dataFrame);
     public abstract TreeMap<Integer, Double> getTestData();
     public abstract Double ewm(Double span, boolean adjust, int min_periods);
     public abstract Double MACD(int fastPeriod, int slowPeriod);
