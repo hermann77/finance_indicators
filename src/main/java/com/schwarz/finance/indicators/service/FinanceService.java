@@ -53,6 +53,7 @@ public class FinanceService implements FinanceServiceInterface {
 
         System.out.println("dataFrameSize: " + dataFrame.size());
 
+        // we take only the last min_periods values
         Integer startTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - min_periods).findFirst().get().getKey();
         SortedMap<Integer, Double> lastPeriodsValues = dataFrame.tailMap(startTimestampKey);
 
