@@ -2,10 +2,7 @@ package com.schwarz.finance.indicators.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.SortedMap;
-import java.util.Stack;
-import java.util.TreeMap;
+import java.util.*;
 
 
 /**
@@ -30,10 +27,18 @@ public class FinanceService implements FinanceServiceInterface {
     public TreeMap<Integer, Double> getTestData() {
         TreeMap<Integer, Double> data = new TreeMap<>();
         // fill data
+        /*
         for (int i = 0; i <= 99; i++) {
             Integer timestamp = Math.toIntExact((System.currentTimeMillis() / 1000) + i);
             data.put(timestamp, Math.random() * 5);
         }
+        */
+        // 25, 20, 14, 16, 27, 20, 12, 15, 14, 19, 22, 24, 26, 25
+        Double[] values = {25.0, 20.0, 14.0, 16.0, 27.0, 20.0, 12.0, 15.0, 14.0, 19.0, 22.0, 24.0, 26.0, 25.0};
+        for (int i = 0; i < values.length; i++) {
+            data.put(i, values[i]);
+        }
+
         return data;
     }
 
@@ -51,11 +56,16 @@ public class FinanceService implements FinanceServiceInterface {
             return null;
         }
 
-        System.out.println("dataFrameSize: " + dataFrame.size());
+        System.out.print("dataFrameSize: " + dataFrame.size() + "  ");
 
         // we take only the last min_periods values
         Integer startTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - min_periods).findFirst().get().getKey();
+
+        System.out.print("startTimestampKey: " + startTimestampKey + "  ");
+
         SortedMap<Integer, Double> lastPeriodsValues = dataFrame.tailMap(startTimestampKey);
+
+        System.out.print("lastPeriodsValues: " + Arrays.toString(lastPeriodsValues.entrySet().toArray()) + "  ");
 
         Double[] EWMi = new Double[lastPeriodsValues.size()];
         double alpha = 2.0 / (span + 1);

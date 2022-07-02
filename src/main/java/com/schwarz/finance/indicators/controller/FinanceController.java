@@ -37,10 +37,16 @@ public class FinanceController {
             Double value = entry.getValue();
             Map<String, Double> outputMap = new HashMap<>();
 
-            SortedMap<Integer, Double> subMap = data.subMap(firstTimestamp, timestamp);
+            SortedMap<Integer, Double> subMap = data.subMap(firstTimestamp, true, timestamp, true);
 
 
             FinanceServiceInterface financeService = financeServiceInterface.getInstance(subMap);
+
+            System.out.println("subMap " + Arrays.toString(subMap.entrySet().toArray()));
+
+
+            Double ewm = financeService.ewm(4.0, true, 4);
+            /*
             Double ewm = financeService.ewm(26.0, true, 26);
             Double macd = financeService.MACD(12, 26);
             Double macdSignal = financeService.signal(9);
@@ -51,7 +57,10 @@ public class FinanceController {
             outputMap.put("macd(12,26,9)", macd);
             outputMap.put("macdSignal(9)", macdSignal);
             outputMap.put("histogram", histogram);
+            */
 
+            outputMap.put("Last Data:", value);
+            outputMap.put("ewm(4)", ewm);
             result.put(timestamp, outputMap);
         }
 
