@@ -42,7 +42,7 @@ public class FinanceController {
 
             FinanceServiceInterface financeService = financeServiceInterface.getInstance(subMap);
 
-            System.out.println("subMap " + Arrays.toString(subMap.entrySet().toArray()));
+            System.out.println("subMap: " + Arrays.toString(subMap.entrySet().toArray()));
 
 
             Double ewm = financeService.ewm(4.0, true, 4);

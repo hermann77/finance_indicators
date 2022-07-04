@@ -12,6 +12,7 @@ import java.util.*;
 public class FinanceService implements FinanceServiceInterface {
 
     private SortedMap<Integer, Double> dataFrame;
+    private  HashMap<Integer, Double> EWMi = new HashMap<>();
     private Stack<Double> macd = new Stack<>();
     private Stack<Double> signal = new Stack<>();
     private Stack<Double> histogram = new Stack<>();
@@ -55,29 +56,53 @@ public class FinanceService implements FinanceServiceInterface {
         if (dataFrame == null || dataFrame.size() < min_periods) {
             return null;
         }
+        double alpha = 2.0 / (span + 1);
 
         System.out.print("dataFrameSize: " + dataFrame.size() + "  ");
 
         // we take only the last min_periods values
         Integer startTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - min_periods).findFirst().get().getKey();
+        System.out.println("startTimestampKey: " + startTimestampKey + "  ");
 
-        System.out.print("startTimestampKey: " + startTimestampKey + "  ");
+        Integer secondLastTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - 2).findFirst().get().getKey();
+        System.out.println("secondLastTimestampKey: " + secondLastTimestampKey + "  ");
+
+        Integer lastTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - 1).findFirst().get().getKey();
+        System.out.println("lastTimestampKey: " + lastTimestampKey + "  ");
+
+        Double lastValue = dataFrame.get(lastTimestampKey);
+        System.out.println("lastValue: " + lastValue + "  ");
 
         SortedMap<Integer, Double> lastPeriodsValues = dataFrame.tailMap(startTimestampKey);
+        System.out.println("lastPeriodsValues: " + Arrays.toString(lastPeriodsValues.entrySet().toArray()) + "  ");
 
-        System.out.print("lastPeriodsValues: " + Arrays.toString(lastPeriodsValues.entrySet().toArray()) + "  ");
+        // if EWM for last period already exists, use it for calculation
+        if (EWMi.get(secondLastTimestampKey) != null) {
+            System.out.println("EWMi.get(secondLastTimestampKey): " + EWMi.get(secondLastTimestampKey) + "  ");
+            Double EWM_i_th = EWMi.get(secondLastTimestampKey) + (lastValue - EWMi.get(secondLastTimestampKey)) * alpha; // i-th value
+            EWMi.put(lastTimestampKey, EWM_i_th);
+            System.out.println("EWMi[" + lastTimestampKey + "]: " + EWMi.get(lastTimestampKey) + "  ");
+        }
+        else { // we should calculate all the EWMs chain (from -span till 0 (now))
+            System.out.println("Calculating all the EWMs chain (from -span till 0 (now))");
 
-        Double[] EWMi = new Double[lastPeriodsValues.size()];
-        double alpha = 2.0 / (span + 1);
+            EWMi.put(lastPeriodsValues.firstKey(), lastPeriodsValues.get(lastPeriodsValues.firstKey()));
 
-        EWMi[0] = lastPeriodsValues.get(lastPeriodsValues.firstKey());
+            Integer previousTimestampKey = lastPeriodsValues.firstKey();
 
-        for (int i = 1; i < EWMi.length; i++) {
-            Double value = lastPeriodsValues.entrySet().stream().skip(i-1).findFirst().get().getValue(); // i-th value
-            EWMi[i] = EWMi[i - 1] + (value - EWMi[i - 1]) * alpha;
+            for (Map.Entry<Integer, Double> entry : lastPeriodsValues.tailMap(lastPeriodsValues.firstKey()).entrySet()) {
+
+                Double value = entry.getValue(); // i-th value
+                System.out.print("value: " + value + "  ");
+                Double EWM_i_th = EWMi.get(previousTimestampKey) + (value - EWMi.get(previousTimestampKey)) * alpha; // i-th value
+                EWMi.put(entry.getKey(), EWM_i_th);
+                System.out.println("EWMi[" + entry.getKey() + "]: " + EWMi.get(entry.getKey()) + "  ");
+
+                previousTimestampKey = entry.getKey();
+            }
         }
 
-        return EWMi[EWMi.length - 1];
+        return EWMi.get(lastTimestampKey);
     }
 
     /**
