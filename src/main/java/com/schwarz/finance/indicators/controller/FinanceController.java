@@ -38,13 +38,10 @@ public class FinanceController {
             Map<String, Double> outputMap = new HashMap<>();
 
             SortedMap<Integer, Double> subMap = data.subMap(firstTimestamp, true, timestamp, true);
-
+            System.out.println("INPUT subMap: " + Arrays.toString(subMap.entrySet().toArray()));
+            System.out.println();
 
             FinanceServiceInterface financeService = financeServiceInterface.getInstance(subMap);
-
-            System.out.println("subMap: " + Arrays.toString(subMap.entrySet().toArray()));
-
-
             Double ewm = financeService.ewm(4.0, true, 4);
             /*
             Double ewm = financeService.ewm(26.0, true, 26);

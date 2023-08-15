@@ -62,13 +62,13 @@ public class FinanceService implements FinanceServiceInterface {
 
         // we take only the last min_periods values
         Integer startTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - min_periods).findFirst().get().getKey();
-        System.out.println("startTimestampKey: " + startTimestampKey + "  ");
+        System.out.print("startTimestampKey: " + startTimestampKey + "  ->  ");
 
         Integer secondLastTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - 2).findFirst().get().getKey();
-        System.out.println("secondLastTimestampKey: " + secondLastTimestampKey + "  ");
+        System.out.print("secondLastTimestampKey: " + secondLastTimestampKey + "  ::  ");
 
         Integer lastTimestampKey = dataFrame.entrySet().stream().skip(dataFrame.size() - 1).findFirst().get().getKey();
-        System.out.println("lastTimestampKey: " + lastTimestampKey + "  ");
+        System.out.print("lastTimestampKey: " + lastTimestampKey + "  ::: ");
 
         Double lastValue = dataFrame.get(lastTimestampKey);
         System.out.println("lastValue: " + lastValue + "  ");
@@ -78,7 +78,7 @@ public class FinanceService implements FinanceServiceInterface {
 
         // if EWM for last period already exists, use it for calculation
         if (EWMi.get(secondLastTimestampKey) != null) {
-            System.out.println("EWMi.get(secondLastTimestampKey): " + EWMi.get(secondLastTimestampKey) + "  ");
+            System.out.println("EWMi.get(" + secondLastTimestampKey + "): " + EWMi.get(secondLastTimestampKey) + "  ");
             Double EWM_i_th = EWMi.get(secondLastTimestampKey) + (lastValue - EWMi.get(secondLastTimestampKey)) * alpha; // i-th value
             EWMi.put(lastTimestampKey, EWM_i_th);
             System.out.println("EWMi[" + lastTimestampKey + "]: " + EWMi.get(lastTimestampKey) + "  ");
@@ -101,6 +101,9 @@ public class FinanceService implements FinanceServiceInterface {
                 previousTimestampKey = entry.getKey();
             }
         }
+
+        System.out.println("EWMi " + Arrays.toString(EWMi.entrySet().toArray()) + "  ");
+        System.out.println();
 
         return EWMi.get(lastTimestampKey);
     }
